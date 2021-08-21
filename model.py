@@ -70,10 +70,10 @@ class Transformer(nn.Module):
         )
         self.fc_out = nn.Linear(embedding_size, trg_vocab_size)
         self.dropout = nn.Dropout(dropout)
-        self.src_pad_idx = src_pad_idx
+        self.src_pad_idx = src_pad_idx 
 
     def make_src_mask(self, src):
-        src_mask = src.transpose(0, 1) == self.src_pad_idx 
+        src_mask = src.transpose(0, 1) == self.src_pad_idx  #src_pad_idx = english.vocab.stoi["<pad>"]
 
         # (N, src_len)
         return src_mask.to(self.device)
@@ -97,7 +97,7 @@ class Transformer(nn.Module):
         )
 
         embed_src = self.dropout(
-            (self.src_word_embedding(src) + self.src_position_embedding(src_positions))
+            (self.src_word_embedding(src) + self.src_position_embedding(src_positions)) # adding posoition vectors to word embeeding vectors
         )
         embed_trg = self.dropout(
             (self.trg_word_embedding(trg) + self.trg_position_embedding(trg_positions))
