@@ -73,7 +73,7 @@ class Transformer(nn.Module):
         self.src_pad_idx = src_pad_idx
 
     def make_src_mask(self, src):
-        src_mask = src.transpose(0, 1) == self.src_pad_idx
+        src_mask = src.transpose(0, 1) == self.src_pad_idx 
 
         # (N, src_len)
         return src_mask.to(self.device)
