@@ -17,21 +17,21 @@ spacy_eng = spacy.load("en")
 
 
 def tokenize_ger(text):
-    return [tok.text for tok in spacy_ger.tokenizer(text)]
+    return [tok.text for tok in spacy_ger.tokenizer(text)] #definition to assign tokens to multi30k according Spacy vocab
 
 
 def tokenize_eng(text):
     return [tok.text for tok in spacy_eng.tokenizer(text)]
 
 
-german = Field(tokenize=tokenize_ger, lower=True, init_token="<sos>", eos_token="<eos>")
+german = Field(tokenize=tokenize_ger, lower=True, init_token="<sos>", eos_token="<eos>") #Configuerd field to start with <sos> and end with <eos>
 
 english = Field(
     tokenize=tokenize_eng, lower=True, init_token="<sos>", eos_token="<eos>"
 )
 
 train_data, valid_data, test_data = Multi30k.splits(
-    exts=(".de", ".en"), fields=(german, english)
+    exts=(".de", ".en"), fields=(german, english)    #tuple or list containing src and tgt language
 )
 
 german.build_vocab(train_data, max_size=10000, min_freq=2)
@@ -54,10 +54,10 @@ class Transformer(nn.Module):
         device,
     ):
         super(Transformer, self).__init__()
-        self.src_word_embedding = nn.Embedding(src_vocab_size, embedding_size)
-        self.src_position_embedding = nn.Embedding(max_len, embedding_size)
-        self.trg_word_embedding = nn.Embedding(trg_vocab_size, embedding_size)
-        self.trg_position_embedding = nn.Embedding(max_len, embedding_size)
+        self.src_word_embedding = nn.Embedding(src_vocab_size, embedding_size) #Source word embedding layer to map words semantics to vectors
+        self.src_position_embedding = nn.Embedding(max_len, embedding_size) #Source position embedding layer to map position to vectors
+        self.trg_word_embedding = nn.Embedding(trg_vocab_size, embedding_size)#Target word embedding layer to map words semantics to vectors
+        self.trg_position_embedding = nn.Embedding(max_len, embedding_size)#Target position embedding layer to map position to vectors
 
         self.device = device
         self.transformer = nn.Transformer(
