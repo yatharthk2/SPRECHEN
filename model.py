@@ -1,3 +1,14 @@
+"""
+Seq2Seq using Transformers on the Multi30k
+dataset. In this video I utilize Pytorch
+inbuilt Transformer modules, and have a
+separate implementation for Transformers
+from scratch. Training this model for a
+while (not too long) gives a BLEU score
+of ~35, and I think training for longer
+would give even better results.
+"""
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -5,7 +16,7 @@ import spacy
 from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
 from torch.utils.tensorboard import SummaryWriter
 from torchtext.datasets import Multi30k
-#rom torchtext.data import Field, BucketIterator
+#from torchtext.data import Field, BucketIterator
 from torchtext.legacy.data import Field, TabularDataset, BucketIterator, Iterator
 """
 To install spacy languages do:
@@ -17,22 +28,24 @@ spacy_eng = spacy.load("en_core_web_sm")
 
 
 def tokenize_ger(text):
-    return [tok.text for tok in spacy_ger.tokenizer(text)] #definition to assign tokens to multi30k according Spacy vocab
+    return [tok.text for tok in spacy_ger.tokenizer(text)]
 
 
 def tokenize_eng(text):
     return [tok.text for tok in spacy_eng.tokenizer(text)]
 
 
-german = Field(tokenize=tokenize_ger, lower=True, init_token="<sos>", eos_token="<eos>") #Configuerd field to start with <sos> and end with <eos>
+german = Field(tokenize=tokenize_ger, lower=True, init_token="<sos>", eos_token="<eos>")
 
 english = Field(
     tokenize=tokenize_eng, lower=True, init_token="<sos>", eos_token="<eos>"
 )
 
-train_data, valid_data, test_data = Multi30k.splits(
-    exts=(".de", ".en"), fields=(german, english)    #tuple or list containing src and tgt language
-)
+'''train_data, valid_data, test_data = Multi30k.splits(
+    exts=(".de", ".en"), fields=(german, english)
+)'''
+train_data, valid_data, test_data = Multi30k(root='./dataset', split=('train', 'valid', 'test'), language_pair=('de', 'en'))
+
 
 german.build_vocab(train_data, max_size=10000, min_freq=2)
 english.build_vocab(train_data, max_size=10000, min_freq=2)
@@ -54,10 +67,10 @@ class Transformer(nn.Module):
         device,
     ):
         super(Transformer, self).__init__()
-        self.src_word_embedding = nn.Embedding(src_vocab_size, embedding_size) #Source word embedding layer to map words semantics to vectors
-        self.src_position_embedding = nn.Embedding(max_len, embedding_size) #Source position embedding layer to map position to vectors
-        self.trg_word_embedding = nn.Embedding(trg_vocab_size, embedding_size)#Target word embedding layer to map words semantics to vectors
-        self.trg_position_embedding = nn.Embedding(max_len, embedding_size)#Target position embedding layer to map position to vectors
+        self.src_word_embedding = nn.Embedding(src_vocab_size, embedding_size)
+        self.src_position_embedding = nn.Embedding(max_len, embedding_size)
+        self.trg_word_embedding = nn.Embedding(trg_vocab_size, embedding_size)
+        self.trg_position_embedding = nn.Embedding(max_len, embedding_size)
 
         self.device = device
         self.transformer = nn.Transformer(
@@ -70,10 +83,10 @@ class Transformer(nn.Module):
         )
         self.fc_out = nn.Linear(embedding_size, trg_vocab_size)
         self.dropout = nn.Dropout(dropout)
-        self.src_pad_idx = src_pad_idx 
+        self.src_pad_idx = src_pad_idx
 
     def make_src_mask(self, src):
-        src_mask = src.transpose(0, 1) == self.src_pad_idx  #src_pad_idx = english.vocab.stoi["<pad>"]
+        src_mask = src.transpose(0, 1) == self.src_pad_idx
 
         # (N, src_len)
         return src_mask.to(self.device)
@@ -97,7 +110,7 @@ class Transformer(nn.Module):
         )
 
         embed_src = self.dropout(
-            (self.src_word_embedding(src) + self.src_position_embedding(src_positions)) # adding posoition vectors to word embeeding vectors
+            (self.src_word_embedding(src) + self.src_position_embedding(src_positions))
         )
         embed_trg = self.dropout(
             (self.trg_word_embedding(trg) + self.trg_position_embedding(trg_positions))
@@ -121,7 +134,7 @@ class Transformer(nn.Module):
 # We're ready to define everything we need for training our Seq2Seq model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-load_model = True
+load_model = False
 save_model = True
 
 # Training hyperparameters
@@ -132,8 +145,8 @@ batch_size = 32
 # Model hyperparameters
 src_vocab_size = len(german.vocab)
 trg_vocab_size = len(english.vocab)
-embedding_size = 256
-num_heads = 4
+embedding_size = 512
+num_heads = 8
 num_encoder_layers = 3
 num_decoder_layers = 3
 dropout = 0.10
@@ -208,6 +221,12 @@ for epoch in range(num_epochs):
         # Forward prop
         output = model(inp_data, target[:-1, :])
 
+        # Output is of shape (trg_len, batch_size, output_dim) but Cross Entropy Loss
+        # doesn't take input in that form. For example if we have MNIST we want to have
+        # output to be: (N, 10) and targets just (N). Here we can view it in a similar
+        # way that we have output_words * batch_size that we want to send in into
+        # our cost function, so we need to do some reshapin.
+        # Let's also remove the start token while we're at it
         output = output.reshape(-1, output.shape[2])
         target = target[1:].reshape(-1)
 
