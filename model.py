@@ -5,15 +5,15 @@ import spacy
 from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
 from torch.utils.tensorboard import SummaryWriter
 from torchtext.datasets import Multi30k
-from torchtext.data import Field, BucketIterator
-
+#rom torchtext.data import Field, BucketIterator
+from torchtext.legacy.data import Field, TabularDataset, BucketIterator, Iterator
 """
 To install spacy languages do:
 python -m spacy download en
 python -m spacy download de
 """
-spacy_ger = spacy.load("de")
-spacy_eng = spacy.load("en")
+spacy_ger = spacy.load("de_core_news_sm")
+spacy_eng = spacy.load("en_core_web_sm")
 
 
 def tokenize_ger(text):
