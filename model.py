@@ -132,8 +132,8 @@ batch_size = 32
 # Model hyperparameters
 src_vocab_size = len(german.vocab)
 trg_vocab_size = len(english.vocab)
-embedding_size = 512
-num_heads = 8
+embedding_size = 256
+num_heads = 4
 num_encoder_layers = 3
 num_decoder_layers = 3
 dropout = 0.10
@@ -208,12 +208,6 @@ for epoch in range(num_epochs):
         # Forward prop
         output = model(inp_data, target[:-1, :])
 
-        # Output is of shape (trg_len, batch_size, output_dim) but Cross Entropy Loss
-        # doesn't take input in that form. For example if we have MNIST we want to have
-        # output to be: (N, 10) and targets just (N). Here we can view it in a similar
-        # way that we have output_words * batch_size that we want to send in into
-        # our cost function, so we need to do some reshapin.
-        # Let's also remove the start token while we're at it
         output = output.reshape(-1, output.shape[2])
         target = target[1:].reshape(-1)
 
