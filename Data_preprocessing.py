@@ -18,11 +18,19 @@ test.to_csv('dataset_en_hi/test.csv' , index=False)
 
 hindi_vocab = setup('hi')
 english_vocab = setup('en')
-
+'''
+@staticmethod
+    #def tokenizer_eng(text):
+        #return [tok.text.lower() for tok in spacy_eng.tokenizer(text)]
 def tokenizer_en(text):
         return [tok.text.lower() for tok in tokenize(text ,'en')]
 def tokenizer_hi(text):
-        return [tokenize(text ,'hi')]
+        return [tokenize(text ,'hi')]'''
+
+def tokenizer_en(text):
+        return tokenize(text ,'en')
+def tokenizer_hi(text):
+        return tokenize(text ,'hi')
 
 english = Field(sequential=True , use_vocab=True , tokenize=tokenizer_en , lower=True)
 hindi = Field(sequential=True , use_vocab=True , tokenize=tokenizer_hi)
@@ -34,7 +42,16 @@ train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' , train='tr
 english.build_vocab(train_data , min_freq=1 , max_size=10000)
 hindi.build_vocab(train_data , min_freq=1 , max_size=10000)
 
-train_iterator , test_iterator = BucketIterator.splits((train_data , test_data) , batch_size=32 , sort_key=lambda x: len(x.eng) , sort_within_batch=True , repeat=False , device='cuda')
+train_iterator , test_iterator = BucketIterator.splits((train_data , test_data) ,
+     batch_size=32 , sort_key=lambda x: len(x.eng) , 
+     sort_within_batch=True , repeat=False , device='cuda')
+'''train_iterator, test_iterator = BucketIterator.splits(
+    (train_data, test_data),
+    batch_size=32,
+    sort_within_batch=True,
+    sort_key=lambda x: len(x.src),
+    device='cuda',
+)'''
 
 for batch in train_iterator:
     print(batch)
