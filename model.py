@@ -213,7 +213,7 @@ for epoch in range(num_epochs):
     model.train()
     losses = []
 
-    for batch_idx, batch in enumerate(train_iterator):
+    for batch_idx, batch in enumerate(train_iterator): 
         # Get input and targets and get to cuda
         inp_data = batch.src.to(device)
         target = batch.trg.to(device)
