@@ -172,7 +172,7 @@ pad_idx = english.vocab.stoi["<pad>"]
 criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
 
 if load_model:
-    load_checkpoint(torch.load("my_checkpoint.pth.tar"), model, optimizer)
+    load_checkpoint(torch.load("./checkpoints/my_checkpoint.pth.tar"), model, optimizer)
 
 sentence = "ein pferd geht unter einer brücke neben einem boot."
 
