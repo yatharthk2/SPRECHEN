@@ -27,7 +27,7 @@ english = Field(
 )
 
 train_data, valid_data, test_data = Multi30k.splits(
-    exts=(".de", ".en"), fields=(german, english) , root="./dataset"
+    exts=(".de", ".en"), fields=(german, english) , root="./dataset_ger_to_eng"
 )
 
 german.build_vocab(train_data, max_size=10000, min_freq=2)

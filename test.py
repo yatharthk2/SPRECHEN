@@ -1,4 +1,3 @@
-import spacy
 import pandas as pd
 from torchtext.data import Field, TabularDataset, Iterator , BucketIterator
 from sklearn.model_selection import train_test_split
@@ -11,7 +10,7 @@ hindi_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-
 raw_data = {'english' : [line for line in english_txt[1:100]] , 
             'hindi' : [line for line in hindi_txt[1:100]]}
 
-df = pd.DataFrame(raw_data , columns=['en' , 'hi'])
+df = pd.DataFrame(raw_data , columns=['english' , 'hindi'])
 
 train , test = train_test_split(df , test_size=0.2)
 train.to_csv('dataset_en_hi/train.csv' , index=False)
