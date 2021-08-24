@@ -1,4 +1,3 @@
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -46,7 +45,7 @@ hindi = Field(tokenize=tokenize_hin, init_token="<sos>", eos_token="<eos>" ,
 english = Field(tokenize=tokenize_eng, init_token="<sos>", eos_token="<eos>" 
         , sequential=True , lower=True)
 
-fields = {'english' : ('eng' , english) , 'hindi' : ('hin' , hindi)}
+fields = {'english' : ('src' , english) , 'hindi' : ('trg' , hindi)}
 
 '''train_data, valid_data, test_data = Multi30k.splits(
     exts=(".de", ".en"), fields=(german, english) , root="./dataset_ger_to_eng"
@@ -157,10 +156,10 @@ num_heads = 8
 num_encoder_layers = 3
 num_decoder_layers = 3
 dropout = 0.10
-max_len = 100
+
 forward_expansion = 4
 src_pad_idx = hindi.vocab.stoi["<pad>"]
-
+max_len = 200
 # Tensorboard to get nice loss plot
 writer = SummaryWriter("runs/loss_plot")
 step = 0
