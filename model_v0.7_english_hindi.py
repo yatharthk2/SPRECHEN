@@ -6,33 +6,57 @@ import spacy
 from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
 from torch.utils.tensorboard import SummaryWriter
 from torchtext.datasets import Multi30k
-from torchtext.data import Field, BucketIterator
-from Data_preprocessing import *
+from torchtext.data import Field, BucketIterator , TabularDataset
+from sklearn.model_selection import train_test_split
+from inltk.inltk import setup
+from inltk.inltk import tokenize
+import pandas as pd
 
-'''spacy_ger = spacy.load("de_core_news_sm")
+english_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.en' , encoding='utf-8').read().split('\n')
+hindi_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.hi' , encoding='utf-8').read().split('\n')
+
+raw_data = {'english' : [line for line in english_txt[1:100]] , 
+            'hindi' : [line for line in hindi_txt[1:100]]}
+
+df = pd.DataFrame(raw_data , columns=['english' , 'hindi'])
+
+train , test = train_test_split(df , test_size=0.2)
+train.to_csv('dataset_en_hi/train.csv' , index=False)
+test.to_csv('dataset_en_hi/test.csv' , index=False)
+
+#spacy_ger = spacy.load("de_core_news_sm")
 spacy_eng = spacy.load("en_core_web_sm")
+#hindi = spacy.load("hi_core_web_sm")
+inltk_hindi = setup('hi')
 
 
-def tokenize_ger(text):
-    return [tok.text for tok in spacy_ger.tokenizer(text)]
+'''def tokenize_ger(text):
+    return [tok.text for tok in spacy_ger.tokenizer(text)]'''
 
 
 def tokenize_eng(text):
     return [tok.text for tok in spacy_eng.tokenizer(text)]
+def tokenize_hin(text):
+    return  tokenize(text ,'hi')
 
 
-german = Field(tokenize=tokenize_ger, lower=True, init_token="<sos>", eos_token="<eos>")
+hindi = Field(tokenize=tokenize_hin, init_token="<sos>", eos_token="<eos>" , 
+        sequential=True )
 
-english = Field(
-    tokenize=tokenize_eng, lower=True, init_token="<sos>", eos_token="<eos>"
-)
+english = Field(tokenize=tokenize_eng, init_token="<sos>", eos_token="<eos>" 
+        , sequential=True , lower=True)
 
-train_data, valid_data, test_data = Multi30k.splits(
+fields = {'english' : ('eng' , english) , 'hindi' : ('hin' , hindi)}
+
+'''train_data, valid_data, test_data = Multi30k.splits(
     exts=(".de", ".en"), fields=(german, english) , root="./dataset_ger_to_eng"
-)
+)'''
 
-german.build_vocab(train_data, max_size=10000, min_freq=2)
-english.build_vocab(train_data, max_size=10000, min_freq=2)'''
+train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' ,
+                 train='train.csv' , test='test.csv' , format='csv' , fields=fields)
+
+english.build_vocab(train_data , min_freq=1 , max_size=10000)
+hindi.build_vocab(train_data , min_freq=1 , max_size=10000)
 
 
 class Transformer(nn.Module):
@@ -135,19 +159,19 @@ num_decoder_layers = 3
 dropout = 0.10
 max_len = 100
 forward_expansion = 4
-src_pad_idx = english.vocab.stoi["<pad>"]
+src_pad_idx = hindi.vocab.stoi["<pad>"]
 
 # Tensorboard to get nice loss plot
 writer = SummaryWriter("runs/loss_plot")
 step = 0
 
-'''train_iterator, valid_iterator, test_iterator = BucketIterator.splits(
-    (train_data, valid_data, test_data),
+train_iterator, test_iterator = BucketIterator.splits(
+    (train_data, test_data),
     batch_size=batch_size,
     sort_within_batch=True,
     sort_key=lambda x: len(x.src),
     device=device,
-)'''
+)
 
 model = Transformer(
     embedding_size,
@@ -169,7 +193,7 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, factor=0.1, patience=10, verbose=True
 )
 
-pad_idx = english.vocab.stoi["<pad>"]
+pad_idx = hindi.vocab.stoi["<pad>"]
 criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
 
 if load_model:
@@ -229,5 +253,5 @@ for epoch in range(num_epochs):
     scheduler.step(mean_loss)
 
 # running on entire test data takes a while
-score = bleu(test_data[1:100], model, english, hindi, device)
+score = bleu(test_data[1:100], model, english , hindi, device)
 print(f"Bleu score {score * 100:.2f}")
