@@ -23,14 +23,9 @@ train , test = train_test_split(df , test_size=0.2)
 train.to_csv('dataset_en_hi/train.csv' , index=False)
 test.to_csv('dataset_en_hi/test.csv' , index=False)
 
-#spacy_ger = spacy.load("de_core_news_sm")
 spacy_eng = spacy.load("en_core_web_sm")
-#hindi = spacy.load("hi_core_web_sm")
 inltk_hindi = setup('hi')
 
-
-'''def tokenize_ger(text):
-    return [tok.text for tok in spacy_ger.tokenizer(text)]'''
 
 
 def tokenize_eng(text):
@@ -46,10 +41,6 @@ english = Field(tokenize=tokenize_eng, init_token="<sos>", eos_token="<eos>"
         , sequential=True , lower=True)
 
 fields = {'english' : ('src' , english) , 'hindi' : ('trg' , hindi)}
-
-'''train_data, valid_data, test_data = Multi30k.splits(
-    exts=(".de", ".en"), fields=(german, english) , root="./dataset_ger_to_eng"
-)'''
 
 train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' ,
                  train='train.csv' , test='test.csv' , format='csv' , fields=fields)
@@ -196,7 +187,7 @@ pad_idx = hindi.vocab.stoi["<pad>"]
 criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
 
 if load_model:
-    load_checkpoint(torch.load("./checkpoints/my_checkpoint.pth.tar"), model, optimizer)
+    load_checkpoint(torch.load("./checkpoints_english_to_hindi/my_checkpoint.pth.tar"), model, optimizer)
 
 sentence = "hello how do you do"
 
