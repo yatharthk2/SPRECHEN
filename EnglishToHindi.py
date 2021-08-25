@@ -15,8 +15,8 @@ import pandas as pd
 english_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.en' , encoding='utf-8').read().split('\n')
 hindi_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.hi' , encoding='utf-8').read().split('\n')
 
-raw_data = {'english' : [line for line in english_txt[1:100]] , 
-            'hindi' : [line for line in hindi_txt[1:100]]}
+raw_data = {'english' : [line for line in english_txt[1:20000]] , 
+            'hindi' : [line for line in hindi_txt[1:20000]]}
 
 df = pd.DataFrame(raw_data , columns=['english' , 'hindi'])
 
@@ -46,8 +46,8 @@ fields = {'english' : ('src' , english) , 'hindi' : ('trg' , hindi)}
 train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' ,
                  train='train.csv' , test='test.csv' , format='csv' , fields=fields)
 
-english.build_vocab(train_data , min_freq=1 , max_size=10000)
-hindi.build_vocab(train_data , min_freq=1 , max_size=10000)
+english.build_vocab(train_data , min_freq=1 , max_size=20000)
+hindi.build_vocab(train_data , min_freq=1 , max_size=20000)
 
 
 class Transformer(nn.Module):
@@ -137,7 +137,7 @@ load_model = False
 save_model = True
 
 # Model hyperparameters
-num_epochs = 10000
+num_epochs = 1000
 learning_rate = 3e-4
 batch_size = 32
 
