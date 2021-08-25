@@ -2,7 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import spacy
-from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
+from utils_en_to_hi import translate_sentence, bleu, save_checkpoint, load_checkpoint
+#from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
 from torch.utils.tensorboard import SummaryWriter
 from torchtext.datasets import Multi30k
 from torchtext.data import Field, BucketIterator , TabularDataset
@@ -152,7 +153,7 @@ forward_expansion = 4
 src_pad_idx = hindi.vocab.stoi["<pad>"]
 max_len = 200
 # Tensorboard to get nice loss plot
-writer = SummaryWriter("runs/loss_plot")
+writer = SummaryWriter("runs/loss_plot_enTOhi")
 step = 0
 
 train_iterator, test_iterator = BucketIterator.splits(
@@ -189,7 +190,7 @@ criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
 if load_model:
     load_checkpoint(torch.load("./checkpoints_english_to_hindi/my_checkpoint.pth.tar"), model, optimizer)
 
-sentence = "hello how do you do"
+sentence = "hello, how are you?"
 
 for epoch in range(num_epochs):
     print(f"[Epoch {epoch} / {num_epochs}]")

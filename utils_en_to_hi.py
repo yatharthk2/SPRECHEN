@@ -2,11 +2,12 @@ import torch
 import spacy
 from torchtext.data.metrics import bleu_score
 import sys
+import en_core_web_sm
 
 
-def translate_sentence(model, sentence, english, hindi, device, max_length=50):
+def translate_sentence(model, sentence, english, hindi , device, max_length=50):
     # Load german tokenizer
-    spacy_eng = spacy.load("en_core_news_sm")
+    spacy_eng = en_core_web_sm.load()
 
     # Create tokens using spacy and everything in lower case (which is what our vocab is)
     if type(sentence) == str:
@@ -42,7 +43,7 @@ def translate_sentence(model, sentence, english, hindi, device, max_length=50):
     return translated_sentence[1:]
 
 
-def bleu(data, model, hindi, english, device):
+def bleu(data, model,english,hindi , device):
     targets = []
     outputs = []
 
@@ -50,7 +51,7 @@ def bleu(data, model, hindi, english, device):
         src = vars(example)["src"]
         trg = vars(example)["trg"]
 
-        prediction = translate_sentence(model, src, english, hindi , device)
+        prediction = translate_sentence(model, src, english,hindi, device)
         prediction = prediction[:-1]  # remove <eos> token
 
         targets.append([trg])
@@ -59,7 +60,7 @@ def bleu(data, model, hindi, english, device):
     return bleu_score(outputs, targets)
 
 
-def save_checkpoint(state, filename="checkpoints/my_checkpoint.pth.tar"):
+def save_checkpoint(state, filename="./checkpoints_english_to_hindi/my_checkpoint.pth.tar"):
     print("=> Saving checkpoint")
     torch.save(state, filename)
 
