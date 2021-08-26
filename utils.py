@@ -68,3 +68,29 @@ def load_checkpoint(checkpoint, model, optimizer):
     print("=> Loading checkpoint")
     model.load_state_dict(checkpoint["state_dict"])
     optimizer.load_state_dict(checkpoint["optimizer"])
+
+
+def save_vocab_eng(vocab, path):
+    with open(path, 'w+', encoding='utf-8') as f:     
+        for token, index in vocab.stoi.items():
+            f.write(f'{index}\t{token}\n')
+def save_vocab(vocab, path):
+    with open(path, 'w+', encoding='utf-8') as f:     
+        for token, index in vocab.stoi.items():
+            f.write(f'{index}\t{token}\n')
+
+def read_vocab_eng(path):
+    vocab = dict()
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            index, token = line.split('\t')
+            vocab[token] = int(index)
+    return vocab
+
+def read_vocab_ger(path):
+    vocab = dict()
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            index, token = line.split('\t')
+            vocab[token] = int(index)
+    return vocab

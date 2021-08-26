@@ -1,3 +1,4 @@
+from numpy import save
 import pandas as pd
 from torchtext.data import Field, TabularDataset, Iterator , BucketIterator
 from sklearn.model_selection import train_test_split
@@ -18,14 +19,6 @@ test.to_csv('dataset_en_hi/test.csv' , index=False)
 
 hindi_vocab = setup('hi')
 english_vocab = setup('en')
-'''
-@staticmethod
-    #def tokenizer_eng(text):
-        #return [tok.text.lower() for tok in spacy_eng.tokenizer(text)]
-def tokenizer_en(text):
-        return [tok.text.lower() for tok in tokenize(text ,'en')]
-def tokenizer_hi(text):
-        return [tokenize(text ,'hi')]'''
 
 def tokenizer_en(text):
         return tokenize(text ,'en')
@@ -35,6 +28,7 @@ def tokenizer_hi(text):
 english = Field(sequential=True , use_vocab=True , tokenize=tokenizer_en , lower=True)
 hindi = Field(sequential=True , use_vocab=True , tokenize=tokenizer_hi)
 
+
 fields = {'english' : ('eng' , english) , 'hindi' : ('hin' , hindi)} 
 
 train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' , train='train.csv' , test='test.csv' , format='csv' , fields=fields)
@@ -42,16 +36,44 @@ train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' , train='tr
 english.build_vocab(train_data , min_freq=1 , max_size=10000)
 hindi.build_vocab(train_data , min_freq=1 , max_size=10000)
 
-train_iterator , test_iterator = BucketIterator.splits((train_data , test_data) ,
+def save_vocab_eng(vocab = english.vocab, path = 'saved_vocab/train.en'):
+    with open(path, 'w+', encoding='utf-8') as f:     
+        for token, index in vocab.stoi.items():
+            f.write(f'{index}\t{token}\n')
+def save_vocab_hin(vocab = hindi.vocab, path = 'saved_vocab/train.hi'):
+    with open(path, 'w+', encoding='utf-8') as f:     
+        for token, index in vocab.stoi.items():
+            f.write(f'{index}\t{token}\n')
+
+def read_vocab_eng(path = 'saved_vocab/train.en'):
+    vocab = dict()
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            index, token = line.split('\t')
+            vocab[token] = int(index)
+    return vocab
+
+def read_vocab_hin(path = 'saved_vocab/train.hi'):
+    vocab = dict()
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            index, token = line.split('\t')
+            vocab[token] = int(index)
+    return vocab
+
+save_vocab_eng()
+save_vocab_hin()
+english.vocab = read_vocab_eng()
+hindi.vocab =  read_vocab_hin()
+
+src_vocab_size = len(english.vocab)
+trg_vocab_size = len(hindi.vocab)
+print(src_vocab_size)
+print(trg_vocab_size)
+'''train_iterator , test_iterator = BucketIterator.splits((train_data , test_data) ,
      batch_size=32 , sort_key=lambda x: len(x.eng) , 
      sort_within_batch=True , repeat=False , device='cuda')
-'''train_iterator, test_iterator = BucketIterator.splits(
-    (train_data, test_data),
-    batch_size=32,
-    sort_within_batch=True,
-    sort_key=lambda x: len(x.src),
-    device='cuda',
-)'''
+
 
 for batch in train_iterator:
-    print(batch)
+    print(batch)'''
