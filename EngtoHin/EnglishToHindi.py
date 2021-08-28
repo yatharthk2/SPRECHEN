@@ -1,54 +1,59 @@
-"""
-Seq2Seq using Transformers on the Multi30k
-dataset. In this video I utilize Pytorch
-inbuilt Transformer modules, and have a
-separate implementation for Transformers
-from scratch. Training this model for a
-while (not too long) gives a BLEU score
-of ~35, and I think training for longer
-would give even better results.
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import spacy
 from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
+#from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
 from torch.utils.tensorboard import SummaryWriter
 from torchtext.datasets import Multi30k
-#from torchtext.data import Field, BucketIterator
-from torchtext.legacy.data import Field, TabularDataset, BucketIterator, Iterator
-"""
-To install spacy languages do:
-python -m spacy download en
-python -m spacy download de
-"""
-spacy_ger = spacy.load("de_core_news_sm")
+from torchtext.data import Field, BucketIterator , TabularDataset
+from sklearn.model_selection import train_test_split
+from inltk.inltk import setup
+from inltk.inltk import tokenize
+import pandas as pd
+from Data_preprocessing import *
+
+'''english_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.en' , encoding='utf-8').read().split('\n')
+hindi_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.hi' , encoding='utf-8').read().split('\n')
+
+raw_data = {'english' : [line for line in english_txt[1:20000]] , 
+            'hindi' : [line for line in hindi_txt[1:20000]]}
+
+df = pd.DataFrame(raw_data , columns=['english' , 'hindi'])
+
+train , test = train_test_split(df , test_size=0.2)
+train.to_csv('dataset_en_hi/train.csv' , index=False)
+test.to_csv('dataset_en_hi/test.csv' , index=False)
+
 spacy_eng = spacy.load("en_core_web_sm")
+inltk_hindi = setup('hi')
 
-
-def tokenize_ger(text):
-    return [tok.text for tok in spacy_ger.tokenizer(text)]
 
 
 def tokenize_eng(text):
     return [tok.text for tok in spacy_eng.tokenizer(text)]
+def tokenize_hin(text):
+    return  tokenize(text ,'hi')
 
 
-german = Field(tokenize=tokenize_ger, lower=True, init_token="<sos>", eos_token="<eos>")
+hindi = Field(tokenize=tokenize_hin, init_token="<sos>", eos_token="<eos>" , 
+        sequential=True )
 
-english = Field(
-    tokenize=tokenize_eng, lower=True, init_token="<sos>", eos_token="<eos>"
-)
+english = Field(tokenize=tokenize_eng, init_token="<sos>", eos_token="<eos>" 
+        , sequential=True , lower=True)
 
-'''train_data, valid_data, test_data = Multi30k.splits(
-    exts=(".de", ".en"), fields=(german, english)
-)'''
-train_data, valid_data, test_data = Multi30k(root='./dataset', split=('train', 'valid', 'test'), language_pair=('de', 'en'))
+fields = {'english' : ('src' , english) , 'hindi' : ('trg' , hindi)}
+
+train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' ,
+                 train='train.csv' , test='test.csv' , format='csv' , fields=fields)
+
+english.build_vocab(train_data , min_freq=1 , max_size=20000)
+hindi.build_vocab(train_data , min_freq=1 , max_size=20000)'''
 
 
-german.build_vocab(train_data, max_size=10000, min_freq=2)
-english.build_vocab(train_data, max_size=10000, min_freq=2)
+
+english.vocab = read_vocab_eng()
+hindi.vocab = read_vocab_hin()
 
 
 class Transformer(nn.Module):
@@ -131,35 +136,34 @@ class Transformer(nn.Module):
         return out
 
 
-# We're ready to define everything we need for training our Seq2Seq model
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 load_model = False
 save_model = True
 
-# Training hyperparameters
-num_epochs = 10000
+# Model hyperparameters
+num_epochs = 1000
 learning_rate = 3e-4
 batch_size = 32
 
-# Model hyperparameters
-src_vocab_size = len(german.vocab)
-trg_vocab_size = len(english.vocab)
+src_vocab_size = len(english.vocab)
+trg_vocab_size = len(hindi.vocab)
 embedding_size = 512
 num_heads = 8
 num_encoder_layers = 3
 num_decoder_layers = 3
 dropout = 0.10
-max_len = 100
-forward_expansion = 4
-src_pad_idx = english.vocab.stoi["<pad>"]
 
+forward_expansion = 4
+src_pad_idx = hindi.vocab.stoi["<pad>"]
+max_len = 200
 # Tensorboard to get nice loss plot
-writer = SummaryWriter("runs/loss_plot")
+writer = SummaryWriter("EngtoHin/runs/loss_plot_enTOhi")
 step = 0
 
-train_iterator, valid_iterator, test_iterator = BucketIterator.splits(
-    (train_data, valid_data, test_data),
+train_iterator, test_iterator = BucketIterator.splits(
+    (train_data, test_data),
     batch_size=batch_size,
     sort_within_batch=True,
     sort_key=lambda x: len(x.src),
@@ -186,13 +190,13 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, factor=0.1, patience=10, verbose=True
 )
 
-pad_idx = english.vocab.stoi["<pad>"]
+pad_idx = hindi.vocab.stoi["<pad>"]
 criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
 
 if load_model:
-    load_checkpoint(torch.load("my_checkpoint.pth.tar"), model, optimizer)
+    load_checkpoint(torch.load("EngtoHin/checkpoints/my_checkpoint.pth.tar"), model, optimizer)
 
-sentence = "ein pferd geht unter einer brücke neben einem boot."
+sentence = "hello, how are you?"
 
 for epoch in range(num_epochs):
     print(f"[Epoch {epoch} / {num_epochs}]")
@@ -206,14 +210,14 @@ for epoch in range(num_epochs):
 
     model.eval()
     translated_sentence = translate_sentence(
-        model, sentence, german, english, device, max_length=50
+        model, sentence, english, hindi , device, max_length=50
     )
 
     print(f"Translated example sentence: \n {translated_sentence}")
     model.train()
     losses = []
 
-    for batch_idx, batch in enumerate(train_iterator): 
+    for batch_idx, batch in enumerate(train_iterator):
         # Get input and targets and get to cuda
         inp_data = batch.src.to(device)
         target = batch.trg.to(device)
@@ -221,12 +225,6 @@ for epoch in range(num_epochs):
         # Forward prop
         output = model(inp_data, target[:-1, :])
 
-        # Output is of shape (trg_len, batch_size, output_dim) but Cross Entropy Loss
-        # doesn't take input in that form. For example if we have MNIST we want to have
-        # output to be: (N, 10) and targets just (N). Here we can view it in a similar
-        # way that we have output_words * batch_size that we want to send in into
-        # our cost function, so we need to do some reshapin.
-        # Let's also remove the start token while we're at it
         output = output.reshape(-1, output.shape[2])
         target = target[1:].reshape(-1)
 
@@ -252,5 +250,5 @@ for epoch in range(num_epochs):
     scheduler.step(mean_loss)
 
 # running on entire test data takes a while
-score = bleu(test_data[1:100], model, german, english, device)
+score = bleu(test_data[1:100], model, english , hindi, device)
 print(f"Bleu score {score * 100:.2f}")

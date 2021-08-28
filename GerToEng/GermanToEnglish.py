@@ -3,10 +3,12 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import spacy
+import torchtext
 from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
 from torch.utils.tensorboard import SummaryWriter
 from torchtext.datasets import Multi30k
 from torchtext.data import Field, BucketIterator
+from Data_preprocessing import read_vocab_eng , read_vocab_ger , train_data , valid_data , test_data
 
 spacy_ger = spacy.load("de_core_news_sm")
 spacy_eng = spacy.load("en_core_web_sm")
@@ -27,11 +29,31 @@ english = Field(
 )
 
 train_data, valid_data, test_data = Multi30k.splits(
-    exts=(".de", ".en"), fields=(german, english) , root="./dataset_ger_to_eng"
+    exts=(".de", ".en"), fields=(german, english) , root="GerToEng\\dataset"
 )
 
 german.build_vocab(train_data, max_size=10000, min_freq=2)
 english.build_vocab(train_data, max_size=10000, min_freq=2)
+'''print(type(english.vocab))
+
+spacy_ger = spacy.load("de_core_news_sm")
+spacy_eng = spacy.load("en_core_web_sm")
+def tokenize_ger(text):
+    return [tok.text for tok in spacy_ger.tokenizer(text)]
+
+
+def tokenize_eng(text):
+    return [tok.text for tok in spacy_eng.tokenizer(text)]
+
+
+german = Field(tokenize=tokenize_ger, lower=True, init_token="<sos>", eos_token="<eos>")
+
+english = Field(
+    tokenize=tokenize_eng, lower=True, init_token="<sos>", eos_token="<eos>"
+)
+
+english.vocab = read_vocab_eng()
+german.vocab =  read_vocab_ger()'''
 
 
 class Transformer(nn.Module):
@@ -137,7 +159,7 @@ forward_expansion = 4
 src_pad_idx = english.vocab.stoi["<pad>"]
 
 # Tensorboard to get nice loss plot
-writer = SummaryWriter("runs/loss_plot")
+writer = SummaryWriter("GerToEng/runs/loss_plot")
 step = 0
 
 train_iterator, valid_iterator, test_iterator = BucketIterator.splits(
@@ -172,7 +194,7 @@ pad_idx = english.vocab.stoi["<pad>"]
 criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
 
 if load_model:
-    load_checkpoint(torch.load("./checkpoints/my_checkpoint.pth.tar"), model, optimizer)
+    load_checkpoint(torch.load("GerToEng/checkpoints/my_checkpoint.pth.tar"), model, optimizer)
 
 sentence = "ein pferd geht unter einer brücke neben einem boot."
 
