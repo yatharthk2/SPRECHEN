@@ -11,19 +11,20 @@ from sklearn.model_selection import train_test_split
 from inltk.inltk import setup
 from inltk.inltk import tokenize
 import pandas as pd
+from model import Transformer
 #from Data_preprocessing import *
 
-english_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.en' , encoding='utf-8').read().split('\n')
-hindi_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.hi' , encoding='utf-8').read().split('\n')
+english_txt = open('EngtoHin/dataset/train.en' , encoding='utf-8').read().split('\n')
+hindi_txt = open('EngtoHin/dataset/train.hi' , encoding='utf-8').read().split('\n')
 
-raw_data = {'english' : [line for line in english_txt[1:20000]] , 
-            'hindi' : [line for line in hindi_txt[1:20000]]}
+raw_data = {'english' : [line for line in english_txt[1:200]] , 
+            'hindi' : [line for line in hindi_txt[1:200]]}
 
 df = pd.DataFrame(raw_data , columns=['english' , 'hindi'])
 
 train , test = train_test_split(df , test_size=0.2)
-train.to_csv('dataset_en_hi/train.csv' , index=False)
-test.to_csv('dataset_en_hi/test.csv' , index=False)
+train.to_csv('EngtoHin/dataset/train.csv' , index=False)
+test.to_csv('EngtoHin/dataset/test.csv' , index=False)
 
 spacy_eng = spacy.load("en_core_web_sm")
 inltk_hindi = setup('hi')
@@ -44,98 +45,11 @@ english = Field(tokenize=tokenize_eng, init_token="<sos>", eos_token="<eos>"
 
 fields = {'english' : ('src' , english) , 'hindi' : ('trg' , hindi)}
 
-train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' ,
+train_data , test_data = TabularDataset.splits(path='EngtoHin/dataset/' ,
                  train='train.csv' , test='test.csv' , format='csv' , fields=fields)
 
-english.build_vocab(train_data , min_freq=1 , max_size=20000)
-hindi.build_vocab(train_data , min_freq=1 , max_size=20000)
-
-
-
-#english.vocab = read_vocab_eng()
-#hindi.vocab = read_vocab_hin()
-
-
-class Transformer(nn.Module):
-    def __init__(
-        self,
-        embedding_size,
-        src_vocab_size,
-        trg_vocab_size,
-        src_pad_idx,
-        num_heads,
-        num_encoder_layers,
-        num_decoder_layers,
-        forward_expansion,
-        dropout,
-        max_len,
-        device,
-    ):
-        super(Transformer, self).__init__()
-        self.src_word_embedding = nn.Embedding(src_vocab_size, embedding_size)
-        self.src_position_embedding = nn.Embedding(max_len, embedding_size)
-        self.trg_word_embedding = nn.Embedding(trg_vocab_size, embedding_size)
-        self.trg_position_embedding = nn.Embedding(max_len, embedding_size)
-
-        self.device = device
-        self.transformer = nn.Transformer(
-            embedding_size,
-            num_heads,
-            num_encoder_layers,
-            num_decoder_layers,
-            forward_expansion,
-            dropout,
-        )
-        self.fc_out = nn.Linear(embedding_size, trg_vocab_size)
-        self.dropout = nn.Dropout(dropout)
-        self.src_pad_idx = src_pad_idx
-
-    def make_src_mask(self, src):
-        src_mask = src.transpose(0, 1) == self.src_pad_idx
-
-        # (N, src_len)
-        return src_mask.to(self.device)
-
-    def forward(self, src, trg):
-        src_seq_length, N = src.shape
-        trg_seq_length, N = trg.shape
-
-        src_positions = (
-            torch.arange(0, src_seq_length)
-            .unsqueeze(1)
-            .expand(src_seq_length, N)
-            .to(self.device)
-        )
-
-        trg_positions = (
-            torch.arange(0, trg_seq_length)
-            .unsqueeze(1)
-            .expand(trg_seq_length, N)
-            .to(self.device)
-        )
-
-        embed_src = self.dropout(
-            (self.src_word_embedding(src) + self.src_position_embedding(src_positions))
-        )
-        embed_trg = self.dropout(
-            (self.trg_word_embedding(trg) + self.trg_position_embedding(trg_positions))
-        )
-
-        src_padding_mask = self.make_src_mask(src)
-        trg_mask = self.transformer.generate_square_subsequent_mask(trg_seq_length).to(
-            self.device
-        )
-
-        out = self.transformer(
-            embed_src,
-            embed_trg,
-            src_key_padding_mask=src_padding_mask,
-            tgt_mask=trg_mask,
-        )
-        out = self.fc_out(out)
-        return out
-
-
+english.build_vocab(train_data , min_freq=1 , max_size=200)
+hindi.build_vocab(train_data , min_freq=1 , max_size=200)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -159,7 +73,7 @@ forward_expansion = 4
 src_pad_idx = hindi.vocab.stoi["<pad>"]
 max_len = 200
 # Tensorboard to get nice loss plot
-writer = SummaryWriter("EngtoHin/runs/loss_plot_enTOhi")
+writer = SummaryWriter("EngtoHin/runs/loss_plot")
 step = 0
 
 train_iterator, test_iterator = BucketIterator.splits(
