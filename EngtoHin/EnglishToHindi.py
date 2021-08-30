@@ -11,9 +11,9 @@ from sklearn.model_selection import train_test_split
 from inltk.inltk import setup
 from inltk.inltk import tokenize
 import pandas as pd
-from Data_preprocessing import *
+#from Data_preprocessing import *
 
-'''english_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.en' , encoding='utf-8').read().split('\n')
+english_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.en' , encoding='utf-8').read().split('\n')
 hindi_txt = open('C:\\Users\\yatha\\Desktop\\dataset\\finalrepo\\train\\alt\\en-hi\\train.hi' , encoding='utf-8').read().split('\n')
 
 raw_data = {'english' : [line for line in english_txt[1:20000]] , 
@@ -48,12 +48,12 @@ train_data , test_data = TabularDataset.splits(path='dataset_en_hi/' ,
                  train='train.csv' , test='test.csv' , format='csv' , fields=fields)
 
 english.build_vocab(train_data , min_freq=1 , max_size=20000)
-hindi.build_vocab(train_data , min_freq=1 , max_size=20000)'''
+hindi.build_vocab(train_data , min_freq=1 , max_size=20000)
 
 
 
-english.vocab = read_vocab_eng()
-hindi.vocab = read_vocab_hin()
+#english.vocab = read_vocab_eng()
+#hindi.vocab = read_vocab_hin()
 
 
 class Transformer(nn.Module):
