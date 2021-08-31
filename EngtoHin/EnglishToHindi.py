@@ -12,13 +12,13 @@ from inltk.inltk import setup
 from inltk.inltk import tokenize
 import pandas as pd
 from model import Transformer
-#from Data_preprocessing import *
+from hyperparam import *
 
 english_txt = open('EngtoHin/dataset/train.en' , encoding='utf-8').read().split('\n')
 hindi_txt = open('EngtoHin/dataset/train.hi' , encoding='utf-8').read().split('\n')
 
-raw_data = {'english' : [line for line in english_txt[1:200]] , 
-            'hindi' : [line for line in hindi_txt[1:200]]}
+raw_data = {'english' : [line for line in english_txt[1:20000]] , 
+            'hindi' : [line for line in hindi_txt[1:20000]]}
 
 df = pd.DataFrame(raw_data , columns=['english' , 'hindi'])
 
@@ -51,27 +51,12 @@ train_data , test_data = TabularDataset.splits(path='EngtoHin/dataset/' ,
 english.build_vocab(train_data , min_freq=1 , max_size=200)
 hindi.build_vocab(train_data , min_freq=1 , max_size=200)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-load_model = False
-save_model = True
-
-# Model hyperparameters
-num_epochs = 1000
-learning_rate = 3e-4
-batch_size = 32
-
+torch.save(english , 'EngtoHin/saved_vocab/english_obj.pth')
+torch.save(hindi , 'EngtoHin/saved_vocab/hindi_obj.pth')
 src_vocab_size = len(english.vocab)
 trg_vocab_size = len(hindi.vocab)
-embedding_size = 512
-num_heads = 8
-num_encoder_layers = 3
-num_decoder_layers = 3
-dropout = 0.10
-
-forward_expansion = 4
 src_pad_idx = hindi.vocab.stoi["<pad>"]
-max_len = 200
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Tensorboard to get nice loss plot
 writer = SummaryWriter("EngtoHin/runs/loss_plot")
 step = 0

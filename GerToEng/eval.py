@@ -17,7 +17,7 @@ batch_size = 32
 
 
 
-def tokenize_ger(text):
+'''def tokenize_ger(text):
     return [tok.text for tok in spacy_ger.tokenizer(text)]
 
 
@@ -36,7 +36,15 @@ train_data, valid_data, test_data = Multi30k.splits(
 )
 
 german.build_vocab(train_data, max_size=10000, min_freq=2)
-english.build_vocab(train_data, max_size=10000, min_freq=2)
+english.build_vocab(train_data, max_size=10000, min_freq=2)'''
+def tokenize_ger(text):
+    return [tok.text for tok in spacy_ger.tokenizer(text)]
+
+
+def tokenize_eng(text):
+    return [tok.text for tok in spacy_eng.tokenizer(text)]
+english = torch.load('GerToEng/saved_vocab/english_obj.pth')
+german = torch.load('GerToEng/saved_vocab/german_obj.pth')
 
 src_vocab_size = len(german.vocab)
 trg_vocab_size = len(english.vocab)

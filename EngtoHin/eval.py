@@ -9,9 +9,6 @@ import torch.optim as optim
 from inltk.inltk import setup
 from inltk.inltk import tokenize
 sentence = "Hello how do you do"
-
-spacy_ger = spacy.load("de_core_news_sm")
-spacy_eng = spacy.load("en_core_web_sm")
 num_epochs = 10000
 learning_rate = 3e-4
 batch_size = 32
@@ -24,22 +21,8 @@ def tokenize_eng(text):
     return [tok.text for tok in spacy_eng.tokenizer(text)]
 def tokenize_hin(text):
     return  tokenize(text ,'hi')
-
-
-hindi = Field(tokenize=tokenize_hin, init_token="<sos>", eos_token="<eos>" , 
-        sequential=True )
-
-english = Field(tokenize=tokenize_eng, init_token="<sos>", eos_token="<eos>" 
-        , sequential=True , lower=True)
-
-fields = {'english' : ('src' , english) , 'hindi' : ('trg' , hindi)}
-
-train_data , test_data = TabularDataset.splits(path='EngtoHin/dataset/' ,
-                 train='train.csv' , test='test.csv' , format='csv' , fields=fields)
-
-english.build_vocab(train_data , min_freq=1 , max_size=200)
-hindi.build_vocab(train_data , min_freq=1 , max_size=200)
-
+english = torch.load('EngtoHin/saved_vocab/english_obj.pth')
+hindi = torch.load('EngtoHin/saved_vocab/hindi_obj.pth')
 src_vocab_size = len(english.vocab)
 trg_vocab_size = len(hindi.vocab)
 embedding_size = 512

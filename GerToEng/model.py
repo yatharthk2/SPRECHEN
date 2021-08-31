@@ -7,7 +7,6 @@ from utils import translate_sentence, bleu, save_checkpoint, load_checkpoint
 from torch.utils.tensorboard import SummaryWriter
 from torchtext.datasets import Multi30k
 from torchtext.data import Field, BucketIterator
-from Data_preprocessing import read_vocab_eng , read_vocab_ger , train_data , valid_data , test_data
 class Transformer(nn.Module):
     def __init__(
         self,
