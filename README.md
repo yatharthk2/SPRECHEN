@@ -19,8 +19,7 @@
 [![Forks][forks-shield]][forks-url]
 <!--[![Stargazers][stars-shield]][stars-url]-->
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-<!--[![LinkedIn][linkedin-shield]][linkedin-url]-->
+
 
 
 
@@ -59,7 +58,7 @@ model and automated German-English and English-Hindi translator are trained resp
 Image taken from 
 <a href="https://arxiv.org/pdf/1706.03762.pdf"><strong>Research Paper »</strong></a>
 
-<img src="https://github.com/yatharthk2/SPRECHEN/blob/master/IVG/arch_image.png" alt="Logo" width="1080" height="300">
+<img src="https://github.com/yatharthk2/SPRECHEN/blob/master/IVG/arch_image.png" alt="Logo" width="800" height="800">
 
 ### GermanToEnglish : 
 Finding libraries to tokenise and setup vocab was fairly simple . We used Spacy for the same purpose and trained the model on Multi30k dataset for 150 epochs .
@@ -135,24 +134,21 @@ Step 2. Download the dataset from <a href="https://drive.google.com/drive/folder
 3. <a href="https://analyticsindiamag.com/top-nlp-libraries-datasets-for-indian-languages/"><strong>dataset for English and Hindi parallel corpus »</strong></a> 
 4. <a href="https://github.com/aladdinpersson/Machine-Learning-Collection/blob/master/ML/Pytorch/more_advanced/seq2seq_transformer/seq2seq_transformer.py"><strong>Transformers base implementation »</strong></a> 
 <!-- CONTACT -->
-## Contact
+## MadeBy
 * Contact Yatharth Kapadia @yatharthk2.nn@gmail.com 
+* Contact Abhinav Chandra @abhinavchandra0526@gmail.com
+* contact Sidarth Jain @....
 
 
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/yatharthk2/Inpainting?color=red&label=contributors&logo=github&logoColor=green&style=for-the-badge
-[contributors-url]: https://github.com/yatharthk2/Inpainting/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/yatharthk2/Inpainting?color=red&logo=github&logoColor=green&style=for-the-badge
-[forks-url]: https://github.com/yatharthk2/Inpainting/network/members
+[contributors-shield]: https://img.shields.io/github/contributors/yatharthk2/SPRECHEN?color=red&logo=github&logoColor=green&style=for-the-badge
+[contributors-url]: https://github.com/yatharthk2/SPRECHEN/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/yatharthk2/sprechen?color=red&logo=github&logoColor=green&style=for-the-badge
+[forks-url]: https://github.com/yatharthk2/Sprechen/network/members
 <!--[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge-->
 <!--[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers-->
-[issues-shield]: https://img.shields.io/bitbucket/issues-raw/yatharthk2/Inpainting?color=red&logo=github&logoColor=green&style=for-the-badge
-[issues-url]:https://github.com/yatharthk2/Inpainting/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/yatharthk2/Inpainting/blob/master/LICENSE
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: C:\Users\yatha\OneDrive\Desktop\projects\Inpainting_project\Inpainting\train_video.gif
+[issues-shield]: https://img.shields.io/bitbucket/issues/yatharthk2/sprechen?color=red&logo=github&logoColor=green&style=for-the-badge
+[issues-url]:https://github.com/yatharthk2/SPRECHEN/issues
