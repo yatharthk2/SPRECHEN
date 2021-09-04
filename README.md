@@ -86,6 +86,7 @@ Prerained weights for EngToHin can be found
 2) Spacy
 3) INLTK
 4) Nvidia cuda toolkit
+5) spaCY
 
 
 
