@@ -63,7 +63,7 @@ Image taken from
 ### GermanToEnglish : 
 Finding libraries to tokenise and setup vocab was fairly simple . We used Spacy for the same purpose and trained the model on Multi30k dataset for 150 epochs .
 One important thing to note is 
-Value of some parameters such as HeadCount and Encoder-Decoder iterations where reduced in comparison to original paper 
+value of some parameters such as HeadCount and Encoder-Decoder iterations where reduced in comparison to original paper 
 considering limited computational power we had at our disposal.
 . Prerained weights for GerToEng can be found 
 <a href="https://drive.google.com/drive/folders/1Mqy2gOyDwlv-MeqNqAFeRnVsGg7obLYg?usp=sharing"><strong>here</strong></a>
@@ -77,7 +77,7 @@ and more 80k lines from 24 lakh parallel corpus from
 <a href="http://lotus.kuee.kyoto-u.ac.jp/WAT/indic-multilingual/index.html"><strong>Dataset</strong></a> , preprocessed and cleaned version can be found 
 <a href="https://drive.google.com/drive/folders/1ZezM4OWqsdPhYHQdbgmzaIP2BzDSNaKM?usp=sharing"><strong>here</strong></a>.
 Same goes here too ,Value of some parameters such as HeadCount and Encoder-Decoder 
-iterations where reduced in comparison to original paper considering limited computational power we had at our disposal.
+iterations were reduced in comparison to original paper considering limited computational power we had at our disposal.
 Prerained weights for EngToHin can be found 
 <a href="https://drive.google.com/drive/folders/1dtSJcRFfTNLR0x4VmKUR32vbRQUZejwg?usp=sharing"><strong>here</strong></a>
 
