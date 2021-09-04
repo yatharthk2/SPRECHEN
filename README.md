@@ -107,10 +107,9 @@ Step 2. Download the dataset from <a href="https://drive.google.com/drive/folder
 ### Testing
 * Run training file (engtohindi.py or gertoeng.py) , it will build tokenised vocab for you.(this process is needed to be done only once) 
 
-* Add check points to the Folder
-  ```sh
-  Download the checkpoints from <a href="https://drive.google.com/drive/folders/1ZezM4OWqsdPhYHQdbgmzaIP2BzDSNaKM?usp=sharing">Here</a> and place it in the respective checkpoints   file. Remember both the translation pipelines have diffterent checkpoints folder
-  ```
+* Add check points to the Folder:
+   Download the checkpoints from <a href="https://drive.google.com/drive/folders/1ZezM4OWqsdPhYHQdbgmzaIP2BzDSNaKM?usp=sharing">Here</a> and place it in the respective checkpoints   file. Remember both the translation pipelines have diffterent checkpoints folder
+ 
 * Edit the sentence variable in the eval.py file , for the sentce you want to translate .
 * run eval.py file 
   ```sh
