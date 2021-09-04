@@ -26,21 +26,21 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/yatharthk2/Inpainting">
+  <a href="https://github.com/yatharthk2/SPRECHEN">
     <img src="https://github.com/yatharthk2/SPRECHEN/blob/master/IVG/head_image.png" alt="Logo" width="1080" height="500">
   </a>
 
   <p align="center">
     <h3 align="center">A state-of-the-art Translator to translate EnglishToHindi and GermanToEnglish </h3>
     <br />
-    <a href="https://github.com/yatharthk2/Inpainting"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/yatharthk2/SPRECHEN"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/yatharthk2/Inpainting/blob/master/result.jpg">View Demo</a>
+    <a href="https://github.com/yatharthk2/SPRECHEN/blob/master/result.jpg">View Demo</a>
     ·
-    <a href="https://github.com/yatharthk2/Inpainting/issues">Report Bug</a>
+    <a href="https://github.com/yatharthk2/SPRECHEN/issues">Report Bug</a>
     ·
-    <a href="https://github.com/yatharthk2/Inpainting/issues">Request Feature</a>
+    <a href="https://github.com/yatharthk2/SPRECHEN/issues">Request Feature</a>
   </p>
 </p>
 
