@@ -83,9 +83,10 @@ Prerained weights for EngToHin can be found
 <a href="https://drive.google.com/drive/folders/1dtSJcRFfTNLR0x4VmKUR32vbRQUZejwg?usp=sharing"><strong>here</strong></a>
 
 ### Built With
-1) Pytorch
-2) Opencv
-3) Nvidia cuda toolkit
+1) TorchText
+2) Spacy
+3) INLTK
+4) Nvidia cuda toolkit
 
 
 
@@ -94,68 +95,48 @@ Prerained weights for EngToHin can be found
 
 Step 1. Clone the repository.
 
-Step 2. Download the dataset and pretrained weights from <a href="https://drive.google.com/drive/folders/1E482OOOe_xYWVE9nKCnF_hrh0aLHgZIN?usp=sharing">Here</a> and place it in the same directory.
+Step 2. Download the dataset from <a href="https://drive.google.com/drive/folders/1ZezM4OWqsdPhYHQdbgmzaIP2BzDSNaKM?usp=sharing">Here</a> and place it in the respective data  file. Remember both the translation pipelines have diffterent data folder
 
 ### Installation
 
-* Python 3.6+
-* Install Pytorch
-
-  (for cude 10.2 – GPU)
-  ```sh
-  pip install torch==1.9.0+cu102 torchvision==0.10.0+cu102 torchaudio===0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
-  ```
-  (for CPU)
-  ```sh
-  pip install torch torchvision torchaudio
-  ```
+* Python 3.7
   
 * Install python libraries
   ```sh
-  pip install -r requirements.txt
+  conda install -r requirements.txt
   ```
+### Testing
+* Run training file (engtohindi.py or gertoeng.py) , it will build tokenised vocab for you.(this process is needed to be done only once) 
+
+* Add check points to the Folder
+  ```sh
+  Download the checkpoints from <a href="https://drive.google.com/drive/folders/1ZezM4OWqsdPhYHQdbgmzaIP2BzDSNaKM?usp=sharing">Here</a> and place it in the respective checkpoints   file. Remember both the translation pipelines have diffterent checkpoints folder
+  ```
+* Edit the sentence variable in the eval.py file , for the sentce you want to translate .
+* run eval.py file 
+  ```sh
+  python GerToEng/eval.py
+  ```
+  
 
 ### Training
 
 * Start from scratch
   ```sh
-  python train.py
+  python GerToEng/GermanToEnglish.py
   ```
-* Resume training
+* To resume training : change load parameter in hyperparameter file to true , the model will automatically load the checkpoints 
   ```sh
-  python train.py --resume <weights_path>
+  python GerToEng/GermanToEnglish.py
   ```
-### Testing
-
-* Run the command line
-  ```sh
-  python run.py --photo <test_image_path>
-  ```
-* Draw Mask
-* Press "s"
-
-Output will be saved in the root directory in ```result.jpg``` format. 
-
-
 <!-- CONTRIBUTING -->
 ## References
-1. <a href="https://arxiv.org/pdf/1804.07723.pdf"><strong>Partial convolution research paper »</strong></a> 
-2. <a href="https://openaccess.thecvf.com/content_ICCV_2017/papers/Harley_Segmentation-Aware_Convolutional_Networks_ICCV_2017_paper.pdf"><strong>Segmentation aware convolution research paper »</strong></a>
-3. <a href="https://github.com/NVIDIA/partialconv"><strong>reference code Implementation »</strong></a> 
-4. <a href="https://github.com/naoto0804/pytorch-inpainting-with-partial-conv"><strong>Base code Implementation »</strong></a> 
-5. <a href="https://github.com/spmallick/learnopencv/blob/master/Image-Inpainting/inpaint.py"><strong>Manual mask generator code reference »</strong></a> 
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-
-
+1. <a href="https://arxiv.org/abs/1706.03762"><strong>Attention is all you need  paper»</strong></a> 
+3. <a href="https://analyticsindiamag.com/top-nlp-libraries-datasets-for-indian-languages/"><strong>dataset for English and Hindi parallel corpus »</strong></a> 
+4. <a href="https://github.com/aladdinpersson/Machine-Learning-Collection/blob/master/ML/Pytorch/more_advanced/seq2seq_transformer/seq2seq_transformer.py"><strong>Transformers base implementation »</strong></a> 
 <!-- CONTACT -->
 ## Contact
-* Contact Yatharth Kapadia @yatharthk2.nn@gmail.com
-* Contact Poojan Panchal @ pdavpoojan@gmail.com 
+* Contact Yatharth Kapadia @yatharthk2.nn@gmail.com 
 
 
 
