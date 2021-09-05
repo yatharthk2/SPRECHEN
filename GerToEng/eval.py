@@ -6,7 +6,7 @@ from torchtext.data import Field, BucketIterator
 from torchtext.datasets import Multi30k
 from utils import load_checkpoint
 import torch.optim as optim
-sentence = "Hallo wie geht es dir"
+sentence = "Jungen tanzen mitten in der Nacht auf Pfosten."
 
 spacy_ger = spacy.load("de_core_news_sm")
 spacy_eng = spacy.load("en_core_web_sm")

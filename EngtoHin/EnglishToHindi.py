@@ -48,8 +48,8 @@ fields = {'english' : ('src' , english) , 'hindi' : ('trg' , hindi)}
 train_data , test_data = TabularDataset.splits(path='EngtoHin/dataset/' ,
                  train='train.csv' , test='test.csv' , format='csv' , fields=fields)
 
-english.build_vocab(train_data , min_freq=1 , max_size=200)
-hindi.build_vocab(train_data , min_freq=1 , max_size=200)
+english.build_vocab(train_data , min_freq=1 , max_size=10000)
+hindi.build_vocab(train_data , min_freq=1 , max_size=10000)
 
 torch.save(english , 'EngtoHin/saved_vocab/english_obj.pth')
 torch.save(hindi , 'EngtoHin/saved_vocab/hindi_obj.pth')
@@ -95,7 +95,7 @@ criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
 if load_model:
     load_checkpoint(torch.load("EngtoHin/checkpoints/my_checkpoint.pth.tar"), model, optimizer)
 
-sentence = "hello, how are you?"
+sentence = "Zelaya asked his people to be able to practice his rights peacefully after his arrival in the Central American country."
 
 for epoch in range(num_epochs):
     print(f"[Epoch {epoch} / {num_epochs}]")
