@@ -81,12 +81,21 @@ iterations were reduced in comparison to original paper considering limited comp
 Prerained weights for EngToHin can be found 
 <a href="https://drive.google.com/drive/folders/1dtSJcRFfTNLR0x4VmKUR32vbRQUZejwg?usp=sharing"><strong>here</strong></a>
 
-### Built With
+## Training loss plots:
+
+### For English to Hindi : 
+<img src="https://github.com/yatharthk2/SPRECHEN/blob/master/IVG/EngToHin_loss_plot.png" alt="Logo" width="700" height="300">
+
+
+### For German to English :  
+<img src="https://github.com/yatharthk2/SPRECHEN/blob/master/IVG/GerToEng_loss_plot.png" alt="Logo" width="700" height="300">
+
+
+## Built With
 1) TorchText
 2) Spacy
 3) INLTK
 4) Nvidia cuda toolkit
-5) spaCY
 
 
 
