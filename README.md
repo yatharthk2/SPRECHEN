@@ -26,21 +26,21 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/yatharthk2/Inpainting">
+  <a href="https://github.com/yatharthk2/SPRECHEN">
     <img src="https://github.com/yatharthk2/SPRECHEN/blob/master/IVG/head_image.png" alt="Logo" width="1080" height="500">
   </a>
 
   <p align="center">
     <h3 align="center">A state-of-the-art Translator to translate EnglishToHindi and GermanToEnglish </h3>
     <br />
-    <a href="https://github.com/yatharthk2/Inpainting"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/yatharthk2/SPRECHEN"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/yatharthk2/Inpainting/blob/master/result.jpg">View Demo</a>
+    <a href="https://github.com/yatharthk2/SPRECHEN/blob/master/result.jpg">View Demo</a>
     ·
-    <a href="https://github.com/yatharthk2/Inpainting/issues">Report Bug</a>
+    <a href="https://github.com/yatharthk2/SPRECHEN/issues">Report Bug</a>
     ·
-    <a href="https://github.com/yatharthk2/Inpainting/issues">Request Feature</a>
+    <a href="https://github.com/yatharthk2/SPRECHEN/issues">Request Feature</a>
   </p>
 </p>
 
@@ -63,7 +63,7 @@ Image taken from
 ### GermanToEnglish : 
 Finding libraries to tokenise and setup vocab was fairly simple . We used Spacy for the same purpose and trained the model on Multi30k dataset for 150 epochs .
 One important thing to note is 
-Value of some parameters such as HeadCount and Encoder-Decoder iterations where reduced in comparison to original paper 
+value of some parameters such as HeadCount and Encoder-Decoder iterations where reduced in comparison to original paper 
 considering limited computational power we had at our disposal.
 . Prerained weights for GerToEng can be found 
 <a href="https://drive.google.com/drive/folders/1Mqy2gOyDwlv-MeqNqAFeRnVsGg7obLYg?usp=sharing"><strong>here</strong></a>
@@ -77,7 +77,7 @@ and more 80k lines from 24 lakh parallel corpus from
 <a href="http://lotus.kuee.kyoto-u.ac.jp/WAT/indic-multilingual/index.html"><strong>Dataset</strong></a> , preprocessed and cleaned version can be found 
 <a href="https://drive.google.com/drive/folders/1ZezM4OWqsdPhYHQdbgmzaIP2BzDSNaKM?usp=sharing"><strong>here</strong></a>.
 Same goes here too ,Value of some parameters such as HeadCount and Encoder-Decoder 
-iterations where reduced in comparison to original paper considering limited computational power we had at our disposal.
+iterations were reduced in comparison to original paper considering limited computational power we had at our disposal.
 Prerained weights for EngToHin can be found 
 <a href="https://drive.google.com/drive/folders/1dtSJcRFfTNLR0x4VmKUR32vbRQUZejwg?usp=sharing"><strong>here</strong></a>
 
@@ -86,6 +86,7 @@ Prerained weights for EngToHin can be found
 2) Spacy
 3) INLTK
 4) Nvidia cuda toolkit
+5) spaCY
 
 
 
@@ -107,10 +108,9 @@ Step 2. Download the dataset from <a href="https://drive.google.com/drive/folder
 ### Testing
 * Run training file (engtohindi.py or gertoeng.py) , it will build tokenised vocab for you.(this process is needed to be done only once) 
 
-* Add check points to the Folder
-  ```sh
-  Download the checkpoints from <a href="https://drive.google.com/drive/folders/1ZezM4OWqsdPhYHQdbgmzaIP2BzDSNaKM?usp=sharing">Here</a> and place it in the respective checkpoints   file. Remember both the translation pipelines have diffterent checkpoints folder
-  ```
+* Add check points to the Folder:
+   Download the checkpoints from <a href="https://drive.google.com/drive/folders/1ZezM4OWqsdPhYHQdbgmzaIP2BzDSNaKM?usp=sharing">Here</a> and place it in the respective checkpoints   file. Remember both the translation pipelines have diffterent checkpoints folder
+ 
 * Edit the sentence variable in the eval.py file , for the sentce you want to translate .
 * run eval.py file 
   ```sh
@@ -137,7 +137,7 @@ Step 2. Download the dataset from <a href="https://drive.google.com/drive/folder
 ## MadeBy
 * Contact Yatharth Kapadia @yatharthk2.nn@gmail.com 
 * Contact Abhinav Chandra @abhinavchandra0526@gmail.com
-* contact Sidarth Jain @....
+* contact Sidarth Jain @...
 
 
 
