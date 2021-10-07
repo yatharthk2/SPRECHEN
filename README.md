@@ -146,7 +146,7 @@ Step 2. Download the dataset from <a href="https://drive.google.com/drive/folder
 ## MadeBy
 * Contact Yatharth Kapadia @yatharthk2.nn@gmail.com 
 * Contact Abhinav Chandra @abhinavchandra0526@gmail.com
-* contact Sidarth Jain @...
+* contact Siddharth Jain @jainsiddharth641@gmail.com
 
 
 
